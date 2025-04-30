@@ -1,0 +1,8 @@
+.gradle
+.idea
+.intellijPlatform
+.run
+.kotlin
+.qodana
+build
+src/main/resources/M8Test/

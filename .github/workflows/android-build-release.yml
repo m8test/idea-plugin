@@ -1,0 +1,75 @@
+name: Build Plugin And Release
+
+on:
+  #  push:
+  #    branches:
+  #      - main
+  #  pull_request:
+  #    branches:
+  #      - main
+  workflow_dispatch:
+
+jobs:
+  delete-logs:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - name: Delete workflow runs
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          retain_days: 0
+          keep_minimum_runs: 0
+  build:
+    needs: [ delete-logs ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Reference Name
+        run: echo "GITHUB_REF=${{ github.ref }}"
+
+      - name: Check if Triggered by Tag
+        run: |
+          if [[ "${{ github.ref }}" != refs/tags/* ]]; then
+            echo "❌ Not triggered by a tag. Exiting..."
+            exit 1
+          fi
+          TAG_NAME=${{ github.ref }}
+          TAG_NAME=${TAG_NAME#refs/tags/}
+          echo "✅ Triggered by tag: $TAG_NAME"
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+
+      - name: Build with Gradle
+        run: |
+          chmod +x ./gradlew
+          ./gradlew buildPlugin
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: Release ${{ env.TAG_NAME }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Plugin to GitHub Release
+        run: |
+          for file in $(find ./build/distributions/ -type f -name "*.zip"); do
+            echo "Uploading $file to release ${{ env.TAG_NAME }}..."
+            gh release upload "${{ env.TAG_NAME }}" "$file" --clobber
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

@@ -1,0 +1,32 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.m8test.idea</id>
+    <name>M8Test</name>
+    <vendor>M8Test</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <resource-bundle>messages.M8TestBundle</resource-bundle>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-groovy.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-java.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-javascript.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-kotlin.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-lua.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-php.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-python.xml"/>
+        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-ruby.xml"/>
+        <toolWindow id="M8TestLog"
+                    anchor="bottom"
+                    icon="/META-INF/pluginIcon.svg"
+                    factoryClass="com.m8test.idea.plugin.toolWindow.LogToolWindowFactory"/>
+        <applicationConfigurable
+                id="com.m8test.idea.plugin.config.M8TestConfigurable"
+                displayName="M8Test Settings"
+                instance="com.m8test.idea.plugin.config.M8TestConfigurable"/>
+        <toolWindow factoryClass="com.m8test.idea.plugin.toolWindow.M8TestToolWindowFactory" id="M8Test"
+                    icon="/META-INF/pluginIcon.svg"/>
+        <postStartupActivity implementation="com.m8test.idea.plugin.startup.M8TestProjectActivity"/>
+    </extensions>
+</idea-plugin>
