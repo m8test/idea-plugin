@@ -52,6 +52,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
         private val settings = ApplicationManager.getApplication().service<M8TestSettings>()
 
         private var ipField = JTextField()
+        private var m8testRootField = JTextField()
         private var portField = JTextField()
         private var debugPortField = JTextField()
         private var enableAdbCheckbox = JCheckBox()
@@ -61,6 +62,10 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 row("设备 IP:") {
                     ipField = JTextField(settings.state.deviceIp)
                     cell(ipField)
+                }
+                row("M8Test项目根目录:") {
+                    m8testRootField = JTextField(settings.state.m8testProjectRoot)
+                    cell(m8testRootField)
                 }
                 row("Adb 端口:") {
                     portField = JTextField(settings.state.adbPort.toString())
@@ -450,6 +455,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
 
         private fun refreshUI() {
             ipField.text = settings.state.deviceIp
+            m8testRootField.text = settings.state.m8testProjectRoot
             portField.text = settings.state.adbPort.toString()
             debugPortField.text = settings.state.debugPort.toString()
             enableAdbCheckbox.isSelected = settings.state.enableAdbForwarding
@@ -457,6 +463,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
 
         private fun saveSettings(): Boolean {
             val ip = ipField.text.trim()
+            val m8testRoot = m8testRootField.text.trim()
             val port = portField.text.toIntOrNull()
             val debugPort = debugPortField.text.toIntOrNull()
             val enableAdb = enableAdbCheckbox.isSelected
@@ -475,6 +482,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
             }
 
             settings.state.deviceIp = ip
+            settings.state.m8testProjectRoot = m8testRoot
             settings.state.adbPort = port
             settings.state.debugPort = debugPort
             settings.state.enableAdbForwarding = enableAdb

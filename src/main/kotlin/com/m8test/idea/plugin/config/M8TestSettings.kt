@@ -18,6 +18,7 @@ class M8TestSettings : PersistentStateComponent<M8TestSettingsState> {
 }
 
 data class M8TestSettingsState(
+    var m8testProjectRoot: String = "",
     var deviceIp: String = "192.168.1.100",
     var adbPort: Int = 5555,
     var enableAdbForwarding: Boolean = false,

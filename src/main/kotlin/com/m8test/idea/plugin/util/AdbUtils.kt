@@ -154,10 +154,11 @@ object AdbUtils {
 
     /**
      * 推送本地项目目录下的所有文件到远程项目根目录。
-     * @param localProjectDir 本地项目根目录（例如 C:/myproject）。
+     * @param project 本地项目根目录（例如 C:/myproject）。
      * @param onResult 回调函数，接收结果 (success, message)。
      */
-    fun pushDirectoryAsync(localProjectDir: String, onResult: (Boolean, String) -> Unit) {
+    fun pushDirectoryAsync(projectDir: String, onResult: (Boolean, String) -> Unit) {
+        val localProjectDir = File(projectDir, state.m8testProjectRoot).canonicalPath
         runAdbTask("推送项目目录到设备", "正在推送项目目录...", { indicator ->
             val projectDir = File(localProjectDir)
             if (!projectDir.exists() || !projectDir.isDirectory) {
@@ -205,10 +206,11 @@ object AdbUtils {
     /**
      * 从远程项目根目录拉取所有文件到本地项目目录，并刷新 IntelliJ 项目视图。
      * @param project IntelliJ 项目对象，用于刷新文件系统。
-     * @param localProjectDir 本地项目根目录（例如 C:/myproject）。
+     * @param projectDir 本地项目根目录（例如 C:/myproject）。
      * @param onResult 回调函数，接收结果 (success, message)。
      */
-    fun pullDirectoryAsync(project: Project, localProjectDir: String, onResult: (Boolean, String) -> Unit) {
+    fun pullDirectoryAsync(project: Project, projectDir: String, onResult: (Boolean, String) -> Unit) {
+        val localProjectDir = File(projectDir, state.m8testProjectRoot).canonicalPath
         runAdbTask("从设备拉取项目目录", "正在拉取项目目录...", { indicator ->
             val projectDir = File(localProjectDir)
             if (!projectDir.exists()) {
