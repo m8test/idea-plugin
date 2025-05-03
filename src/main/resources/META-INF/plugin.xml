@@ -21,10 +21,6 @@
                     anchor="bottom"
                     icon="/META-INF/pluginIcon.svg"
                     factoryClass="com.m8test.idea.plugin.toolWindow.LogToolWindowFactory"/>
-        <applicationConfigurable
-                id="com.m8test.idea.plugin.config.M8TestConfigurable"
-                displayName="M8Test Settings"
-                instance="com.m8test.idea.plugin.config.M8TestConfigurable"/>
         <toolWindow factoryClass="com.m8test.idea.plugin.toolWindow.M8TestToolWindowFactory" id="M8Test"
                     icon="/META-INF/pluginIcon.svg"/>
         <postStartupActivity implementation="com.m8test.idea.plugin.startup.M8TestProjectActivity"/>

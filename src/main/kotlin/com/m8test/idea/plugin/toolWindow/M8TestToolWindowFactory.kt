@@ -13,8 +13,6 @@ import com.intellij.ui.components.JBTabbedPane
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
 import com.intellij.util.IconUtil
-import com.m8test.idea.plugin.config.CONFIG_TOPIC
-import com.m8test.idea.plugin.config.M8TestConfigurable
 import com.m8test.idea.plugin.config.M8TestSettings
 import com.m8test.idea.plugin.util.AdbUtils
 import com.m8test.idea.plugin.util.HttpUtils
@@ -58,32 +56,22 @@ class M8TestToolWindowFactory : ToolWindowFactory {
         private var debugPortField = JTextField()
         private var enableAdbCheckbox = JCheckBox()
 
-        init {
-            ApplicationManager.getApplication().messageBus.connect(this)
-                .subscribe(CONFIG_TOPIC, object : M8TestConfigurable.M8TestSettingsListener {
-                    override fun onSettingsChanged() {
-                        refreshUI()
-                        LogUtils.info("工具窗口配置已更新。")
-                    }
-                })
-        }
-
         fun createConfigPanel(): JPanel {
             return panel {
                 row("设备 IP:") {
-                    ipField = JTextField(settings.deviceIp)
+                    ipField = JTextField(settings.state.deviceIp)
                     cell(ipField)
                 }
                 row("Adb 端口:") {
-                    portField = JTextField(settings.adbPort.toString())
+                    portField = JTextField(settings.state.adbPort.toString())
                     cell(portField)
                 }
                 row("调试端口:") {
-                    debugPortField = JTextField(settings.debugPort.toString())
+                    debugPortField = JTextField(settings.state.debugPort.toString())
                     cell(debugPortField)
                 }
                 row {
-                    enableAdbCheckbox = JCheckBox("启用 ADB 端口转发", settings.enableAdbForwarding)
+                    enableAdbCheckbox = JCheckBox("启用 ADB 端口转发", settings.state.enableAdbForwarding)
                     cell(enableAdbCheckbox)
                 }
                 row {
@@ -92,9 +80,6 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                         if (saveSettings()) {
                             LogUtils.info("配置已保存。")
                             refreshUI()
-                            ApplicationManager.getApplication().messageBus
-                                .syncPublisher(CONFIG_TOPIC)
-                                .onSettingsChanged()
                         }
                     }
                     button.component.icon = icon
@@ -141,7 +126,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                         }
 
                         val confirm = Messages.showYesNoDialog(
-                            "确定要执行端口转发吗？\n这将转发本地端口 ${settings.debugPort} 到远程设备端口。",
+                            "确定要执行端口转发吗？\n这将转发本地端口 ${settings.state.debugPort} 到远程设备端口。",
                             "确认端口转发",
                             Messages.getQuestionIcon()
                         )
@@ -464,10 +449,10 @@ class M8TestToolWindowFactory : ToolWindowFactory {
         }
 
         private fun refreshUI() {
-            ipField.text = settings.deviceIp
-            portField.text = settings.adbPort.toString()
-            debugPortField.text = settings.debugPort.toString()
-            enableAdbCheckbox.isSelected = settings.enableAdbForwarding
+            ipField.text = settings.state.deviceIp
+            portField.text = settings.state.adbPort.toString()
+            debugPortField.text = settings.state.debugPort.toString()
+            enableAdbCheckbox.isSelected = settings.state.enableAdbForwarding
         }
 
         private fun saveSettings(): Boolean {
@@ -489,10 +474,10 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 return false
             }
 
-            settings.deviceIp = ip
-            settings.adbPort = port
-            settings.debugPort = debugPort
-            settings.enableAdbForwarding = enableAdb
+            settings.state.deviceIp = ip
+            settings.state.adbPort = port
+            settings.state.debugPort = debugPort
+            settings.state.enableAdbForwarding = enableAdb
             return true
         }
 
