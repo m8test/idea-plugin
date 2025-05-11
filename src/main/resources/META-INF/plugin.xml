@@ -9,14 +9,6 @@
     <resource-bundle>messages.M8TestBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-groovy.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-java.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-javascript.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-kotlin.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-lua.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-php.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-python.xml"/>
-        <defaultLiveTemplates file="/M8Test/live-templates/M8Test-ruby.xml"/>
         <toolWindow id="M8TestLog"
                     anchor="bottom"
                     icon="/META-INF/pluginIcon.svg"

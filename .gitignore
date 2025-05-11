@@ -6,3 +6,4 @@
 .qodana
 build
 src/main/resources/M8Test/
+libs/m8test-gradle.jar

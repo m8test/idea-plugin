@@ -5,6 +5,13 @@ import java.net.URL
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
+buildscript {
+    dependencies {
+        val m8testGradlePath: String by project
+        classpath(project.files(m8testGradlePath))
+    }
+}
+
 plugins {
     id("java") // Java support
     alias(libs.plugins.kotlin) // Kotlin support
