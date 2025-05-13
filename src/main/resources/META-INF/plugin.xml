@@ -22,5 +22,6 @@
         <toolWindow id="M8TestLog" anchor="bottom" icon="/META-INF/pluginIcon.svg"
                     factoryClass="com.m8test.idea.plugin.toolWindow.LogToolWindowFactory"/>
         <postStartupActivity implementation="com.m8test.idea.plugin.startup.M8TestProjectActivity"/>
+        <projectTemplatesFactory implementation="com.m8test.idea.plugin.template.M8TestProjectTemplatesFactory"/>
     </extensions>
 </idea-plugin>
