@@ -5,17 +5,16 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.util.IconLoader
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTabbedPane
 import com.intellij.ui.content.ContentFactory
 import com.intellij.ui.dsl.builder.panel
-import com.intellij.util.IconUtil
 import com.m8test.idea.plugin.config.M8TestSettings
 import com.m8test.idea.plugin.util.AdbUtils
 import com.m8test.idea.plugin.util.HttpUtils
+import com.m8test.idea.plugin.util.IconUtils
 import com.m8test.idea.plugin.util.LogUtils
 import kotlinx.coroutines.runBlocking
 import java.awt.BorderLayout
@@ -80,7 +79,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                     cell(enableAdbCheckbox)
                 }
                 row {
-                    val icon = loadScaledIcon("/icons/save.svg", 24)
+                    val icon = IconUtils.loadScaledIcon("/icons/save.svg", 24)
                     val button = button("保存配置") {
                         if (saveSettings()) {
                             LogUtils.info("配置已保存。")
@@ -90,7 +89,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                     button.component.icon = icon
                 }
                 row {
-                    val refreshIcon = loadScaledIcon("/icons/refresh.svg", 24)
+                    val refreshIcon = IconUtils.loadScaledIcon("/icons/refresh.svg", 24)
                     button("刷新配置") {
                         refreshUI()
                         LogUtils.info("配置已刷新。")
@@ -102,7 +101,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
         fun createActionPanel(): JPanel {
             return panel {
                 row {
-                    val connectIcon = loadScaledIcon("/icons/connect.svg", 24)
+                    val connectIcon = IconUtils.loadScaledIcon("/icons/connect.svg", 24)
                     val button = button("连接设备") {
                         if (!saveSettings()) return@button
 
@@ -121,7 +120,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                     button.component.icon = connectIcon
                 }
                 row {
-                    val forwardIcon = loadScaledIcon("/icons/forward.svg", 24)
+                    val forwardIcon = IconUtils.loadScaledIcon("/icons/forward.svg", 24)
                     val button = button("执行端口转发") {
                         if (!saveSettings()) return@button
 
@@ -149,7 +148,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val disconnectIcon = loadScaledIcon("/icons/disconnect.svg", 24)
+                    val disconnectIcon = IconUtils.loadScaledIcon("/icons/disconnect.svg", 24)
                     val button = button("断开设备") {
                         if (!saveSettings()) return@button
 
@@ -169,7 +168,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val scrcpyIcon = loadScaledIcon("/icons/launch.svg", 24)
+                    val scrcpyIcon = IconUtils.loadScaledIcon("/icons/launch.svg", 24)
                     val button = button("启动 scrcpy") {
                         if (!saveSettings()) return@button
 
@@ -189,7 +188,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val pushIcon = loadScaledIcon("/icons/upload.svg", 24)
+                    val pushIcon = IconUtils.loadScaledIcon("/icons/upload.svg", 24)
                     val button = button("推送项目文件") {
                         if (!saveSettings()) return@button
 
@@ -217,7 +216,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val pullIcon = loadScaledIcon("/icons/download.svg", 24)
+                    val pullIcon = IconUtils.loadScaledIcon("/icons/download.svg", 24)
                     val button = button("拉取项目文件") {
                         if (!saveSettings()) return@button
 
@@ -245,7 +244,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val pushRunIcon = loadScaledIcon("/icons/upload-run.svg", 24)
+                    val pushRunIcon = IconUtils.loadScaledIcon("/icons/upload-run.svg", 24)
                     val button = button("推送并运行项目") {
                         if (!saveSettings()) return@button
 
@@ -301,7 +300,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val pullRunIcon = loadScaledIcon("/icons/download-run.svg", 24)
+                    val pullRunIcon = IconUtils.loadScaledIcon("/icons/download-run.svg", 24)
                     val button = button("拉取并运行项目") {
                         if (!saveSettings()) return@button
 
@@ -357,7 +356,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val webSocketIcon = loadScaledIcon("/icons/websocket.svg", 24)
+                    val webSocketIcon = IconUtils.loadScaledIcon("/icons/websocket.svg", 24)
                     val button = button("连接 WebSocket 日志") {
                         if (!saveSettings()) return@button
 
@@ -385,7 +384,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val runIcon = loadScaledIcon("/icons/run.svg", 24)
+                    val runIcon = IconUtils.loadScaledIcon("/icons/run.svg", 24)
                     val button = button("运行项目") {
                         if (!saveSettings()) return@button
                         val argument = Messages.showInputDialog(
@@ -419,7 +418,7 @@ class M8TestToolWindowFactory : ToolWindowFactory {
                 }
 
                 row {
-                    val stopIcon = loadScaledIcon("/icons/interrupt.svg", 24)
+                    val stopIcon = IconUtils.loadScaledIcon("/icons/interrupt.svg", 24)
                     val button = button("中断项目") {
                         if (!saveSettings()) return@button
 
@@ -493,17 +492,6 @@ class M8TestToolWindowFactory : ToolWindowFactory {
             val regex = "^(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})$".toRegex()
             if (!ip.matches(regex)) return false
             return ip.split(".").all { it.toIntOrNull()?.let { n -> n in 0..255 } == true }
-        }
-
-        // 加载并缩放图标
-        private fun loadScaledIcon(path: String, size: Int): Icon {
-            try {
-                val originalIcon = IconLoader.getIcon(path, MyToolWindow::class.java)
-                return IconUtil.scale(originalIcon, null, size.toFloat() / originalIcon.iconWidth)
-            } catch (e: Exception) {
-                Messages.showErrorDialog("无法加载图标: $path", "图标加载错误")
-                return ImageIcon()
-            }
         }
 
         override fun dispose() {

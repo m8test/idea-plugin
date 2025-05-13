@@ -41,11 +41,16 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
+    val m8testGradlePath: String by project
+    implementation(files(m8testGradlePath))
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.json)
     implementation(libs.ktor.client.websockets)
     implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.netty)
+    implementation(libs.ktor.server.content.negotiation)
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 
@@ -175,27 +180,28 @@ intellijPlatformTesting {
 val downloadM8TestResources by tasks.registering {
     val resourceRoot: File = project.file("src/main/resources")
     doLast {
-        fun getTemplateFile(language: String): Pair<String, String> {
-            return "https://github.com/m8test/code-snippets/raw/refs/heads/0.1.3/idea/M8Test-$language.xml" to "M8Test/live-templates/M8Test-$language.xml"
-        }
-
-        fun getTemplateFiles(): List<Pair<String, String>> {
-            return listOf(
-                "groovy",
-                "java",
-                "javascript",
-                "kotlin",
-                "lua",
-                "php",
-                "python",
-                "ruby",
-            ).map { getTemplateFile(it) }
-        }
+//        fun getTemplateFile(language: String): Pair<String, String> {
+//            return "https://github.com/m8test/code-snippets/raw/refs/heads/0.1.3/idea/M8Test-$language.xml" to "M8Test/live-templates/M8Test-$language.xml"
+//        }
+//
+//        fun getTemplateFiles(): List<Pair<String, String>> {
+//            return listOf(
+//                "groovy",
+//                "java",
+//                "javascript",
+//                "kotlin",
+//                "lua",
+//                "php",
+//                "python",
+//                "ruby",
+//            ).map { getTemplateFile(it) }
+//        }
         // 下载文件的列表配置
-        val filesToDownload = mutableListOf(
-            // Pair(下载地址, 本地存放路径，相对于 src/main/resources)
-            "https://github.com/Genymobile/scrcpy/releases/download/v3.2/scrcpy-win64-v3.2.zip" to "M8Test/scrcpy.zip",
-        ).apply { getTemplateFiles().let(this::addAll) }
+//        val filesToDownload = mutableListOf(
+//            // Pair(下载地址, 本地存放路径，相对于 src/main/resources)
+//            "https://github.com/Genymobile/scrcpy/releases/download/v3.2/scrcpy-win64-v3.2.zip" to "M8Test/scrcpy.zip",
+//        ).apply { getTemplateFiles().let(this::addAll) }
+        val filesToDownload = emptyMap<String, String>()
 
         filesToDownload.forEach { (urlStr, relativePath) ->
             val outputFile = resourceRoot.resolve(relativePath)

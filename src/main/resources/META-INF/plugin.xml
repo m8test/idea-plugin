@@ -7,14 +7,22 @@
     <depends>com.intellij.modules.platform</depends>
 
     <resource-bundle>messages.M8TestBundle</resource-bundle>
-
+    <!-- 注册 Action -->
+    <actions>
+        <!-- 注册动作组作为顶级菜单 -->
+        <group id="com.m8test.idea.plugin.M8TestActionGroup"
+               class="com.m8test.idea.plugin.actions.M8TestActionGroup"
+               text="M8Test"
+               description="M8Test plugin actions"
+               popup="true">
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
+    </actions>
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="M8TestLog"
-                    anchor="bottom"
-                    icon="/META-INF/pluginIcon.svg"
+        <toolWindow id="M8TestLog" anchor="bottom" icon="/META-INF/pluginIcon.svg"
                     factoryClass="com.m8test.idea.plugin.toolWindow.LogToolWindowFactory"/>
-        <toolWindow factoryClass="com.m8test.idea.plugin.toolWindow.M8TestToolWindowFactory" id="M8Test"
-                    icon="/META-INF/pluginIcon.svg"/>
+        <toolWindow id="M8Test" icon="/META-INF/pluginIcon.svg"
+                    factoryClass="com.m8test.idea.plugin.toolWindow.M8TestToolWindowFactory"/>
         <postStartupActivity implementation="com.m8test.idea.plugin.startup.M8TestProjectActivity"/>
     </extensions>
 </idea-plugin>
