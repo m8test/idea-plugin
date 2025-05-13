@@ -9,7 +9,7 @@ import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.components.JBTabbedPane
 import com.intellij.ui.content.ContentFactory
 import com.jetbrains.rd.util.AtomicInteger
-import com.m8test.idea.plugin.util.HttpUtils
+import com.m8test.idea.plugin.util.WebSocketUtils
 import com.m8test.idea.plugin.util.LogUtils
 import java.awt.*
 import javax.swing.*
@@ -148,7 +148,7 @@ class LogToolWindowFactory : ToolWindowFactory {
          * 公共方法：处理日志相关操作，包括生成前缀、颜色、创建LogEntry对象并添加到列表，以及根据条件展示日志
          */
         private fun processLog(
-            entry: HttpUtils.Entry,
+            entry: WebSocketUtils.Entry,
             logEntries: MutableList<LogEntry>,
             textPane: JTextPane,
             doc: StyledDocument
@@ -182,11 +182,11 @@ class LogToolWindowFactory : ToolWindowFactory {
             }
         }
 
-        fun appendScriptLog(entry: HttpUtils.Entry) {
+        fun appendScriptLog(entry: WebSocketUtils.Entry) {
             processLog(entry, logEntriesScript, textPaneScript, docScript)
         }
 
-        fun appendPluginLog(entry: HttpUtils.Entry) {
+        fun appendPluginLog(entry: WebSocketUtils.Entry) {
             processLog(entry, logEntriesPlugin, textPanePlugin, docPlugin)
         }
 
@@ -198,7 +198,7 @@ class LogToolWindowFactory : ToolWindowFactory {
         private val logId = AtomicInteger(1)
         fun appendPluginLog(level: String, message: String) {
             appendPluginLog(
-                HttpUtils.Entry(
+                WebSocketUtils.Entry(
                     level = level,
                     message = message,
                     id = logId.getAndIncrement(),

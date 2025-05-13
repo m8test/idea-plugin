@@ -1,25 +1,22 @@
 package com.m8test.idea.plugin.util
 
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.m8test.idea.plugin.config.M8TestSettings
+import com.m8test.gradle.util.ConfigUtils
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.websocket.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.runBlocking
 import java.util.concurrent.atomic.AtomicBoolean
 
-object HttpUtils {
+object WebSocketUtils {
     private const val CONNECT_TIMEOUT_MS = 10_000L // 10 秒连接超时
     private const val REQUEST_TIMEOUT_MS = 30_000L // 30 秒请求超时
     private const val SOCKET_TIMEOUT_MS = 30_000L // 30 秒套接字超时
@@ -33,7 +30,8 @@ object HttpUtils {
         }
     }
 
-    private val settings by lazy { M8TestSettings.instance.state }
+    private val settings
+        get() = ConfigUtils.getDeviceInfo()
     private val gson = Gson()
 
     @Volatile
@@ -46,79 +44,12 @@ object HttpUtils {
     private const val maxRetries = 5
     private const val reconnectDelayMillis = 3000L
 
-
-    data class Response(
-        @SerializedName("success")
-        val success: Boolean,
-        @SerializedName("message")
-        val message: String,
-        @SerializedName("data")
-        val data: Any?
-    )
-
-    suspend fun startProject(argument: String?) {
-        val command = getCommand(type = "start", argument = argument?.let { it.ifBlank { null } })
-        executeCommand(command)
-    }
-
-    suspend fun interruptProject() {
-        val command = getCommand(type = "interrupt")
-        executeCommand(command)
-    }
-
-    private suspend fun getCommand(type: String, argument: String? = null): String {
-        val remotePath = getProjectRoot()
-        // 基础命令
-        var command = "script $type build --path $remotePath"
-        // 如果 argument 存在，则添加 --argument 部分
-        if (!argument.isNullOrBlank()) {
-            command += " --argument $argument"
-        }
-        return command
-    }
-
-    private suspend fun executeCommand(command: String) {
-        val url = buildHttpUrl("/command/execute")
-        try {
-            val response = client.post(url) { setBody(command) }.bodyAsText()
-            val res = gson.fromJson(response, Response::class.java)
-            if (res.success)
-                LogUtils.debug("运行${command}成功")
-            else
-                LogUtils.error("运行${command}失败:${res.message}")
-        } catch (e: Exception) {
-            val msg = "获取项目根目录失败: ${e.message}"
-            LogUtils.error(msg)
-        }
-    }
-
-    suspend fun getProjectRoot(): String {
-        val url = buildHttpUrl("/config/root")
-        return try {
-            val response = client.post(url).bodyAsText()
-            LogUtils.debug("获取项目根目录成功: $response")
-            response
-        } catch (e: Exception) {
-            val msg = "获取项目根目录失败: ${e.message}"
-            LogUtils.error(msg)
-            throw Exception(msg)
-        }
-    }
-
-    fun buildWebSocketUrl(): String {
+    private fun buildWebSocketUrl(): String {
         return buildAddress("ws", "/console")
     }
 
-    private fun buildHttpUrl(path: String): String {
-        return buildAddress("http", path)
-    }
-
     private fun buildAddress(protocol: String, path: String): String {
-        val baseUrl = if (settings.enableAdbForwarding) {
-            "localhost:${settings.debugPort}"
-        } else {
-            "${settings.deviceIp}:${settings.debugPort}"
-        }
+        val baseUrl = "localhost:${settings.debuggerPort}"
         return "$protocol://$baseUrl$path"
     }
 
@@ -245,10 +176,10 @@ object HttpUtils {
                         val (success, message) = runBlocking {
                             connectWebSocket(
                                 onMessage = { entry ->
-//                                    logger.info("WebSocket message: [${entry.level}] ${entry.tag}: ${entry.message}")
+//                                    LogUtils.info("WebSocket message: [${entry.level}] ${entry.tag}: ${entry.message}")
                                 },
                                 onError = { throwable ->
-//                                    logger.error("WebSocket error: ${throwable.message}", throwable)
+                                    LogUtils.error("WebSocket error: ${throwable.message}", throwable)
                                 }
                             )
                         }

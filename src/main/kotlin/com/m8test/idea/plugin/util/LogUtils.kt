@@ -8,7 +8,7 @@ object LogUtils {
         this.logPanel = panel
     }
 
-    fun appendScriptLog(entry: HttpUtils.Entry) {
+    fun appendScriptLog(entry: WebSocketUtils.Entry) {
         logPanel.appendScriptLog(entry)
     }
 

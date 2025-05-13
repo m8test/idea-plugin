@@ -10,7 +10,7 @@ if (!targetFile.exists()) {
     targetFile.parentFile.mkdirs()
     println("Downloading file to $targetFile")
     try {
-        val url = URL("https://github-registry-files.githubusercontent.com/952370499/88089c80-2f45-11f0-8e62-cccc5554caf8?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250512%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250512T072718Z&X-Amz-Expires=300&X-Amz-Signature=be42e4e61bcb1d452620711e79ca2b0dc8a89d1936db88e2fcd56ce9b9e91ebf&X-Amz-SignedHeaders=host&response-content-disposition=filename%3Dgradle-plugin-0.1.0.jar&response-content-type=application%2Foctet-stream")
+        val url = URL("https://github-registry-files.githubusercontent.com/952370499/11dc6680-3027-11f0-826b-4658e9f57c61?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250513%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250513T115033Z&X-Amz-Expires=300&X-Amz-Signature=1e59d2f5b7ac680c832e0c5067ce0f0900961aa9fa491dce62a8cacdd620a102&X-Amz-SignedHeaders=host&response-content-disposition=filename%3Dgradle-plugin-0.1.0.jar&response-content-type=application%2Foctet-stream")
         url.openStream().use { input -> Files.copy(input, targetFile.toPath()) }
         println("Download complete.")
     } catch (e: Exception) {

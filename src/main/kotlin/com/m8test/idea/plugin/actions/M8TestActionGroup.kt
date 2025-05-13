@@ -14,7 +14,12 @@ class M8TestActionGroup : ActionGroup("M8Test", true) {
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        return arrayOf(DocumentationActionGroup())
+        return arrayOf(
+            InstallM8TestAction(),
+            DocumentationActionGroup(),
+            ConnectWebSocketAction(),
+            ConnectScrcpyAction()
+        )
     }
 
     override fun update(e: AnActionEvent) {

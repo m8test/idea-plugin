@@ -178,8 +178,11 @@ intellijPlatformTesting {
 
 // 定义一个统一的下载任务
 val downloadM8TestResources by tasks.registering {
+    val m8testGradlePath: String by project
+    val m8testGradleJar = File(project.projectDir, m8testGradlePath)
     val resourceRoot: File = project.file("src/main/resources")
     doLast {
+        m8testGradleJar.copyTo(File(resourceRoot, "M8Test/m8test-gradle.jar"), true)
 //        fun getTemplateFile(language: String): Pair<String, String> {
 //            return "https://github.com/m8test/code-snippets/raw/refs/heads/0.1.3/idea/M8Test-$language.xml" to "M8Test/live-templates/M8Test-$language.xml"
 //        }
@@ -201,6 +204,7 @@ val downloadM8TestResources by tasks.registering {
 //            // Pair(下载地址, 本地存放路径，相对于 src/main/resources)
 //            "https://github.com/Genymobile/scrcpy/releases/download/v3.2/scrcpy-win64-v3.2.zip" to "M8Test/scrcpy.zip",
 //        ).apply { getTemplateFiles().let(this::addAll) }
+
         val filesToDownload = emptyMap<String, String>()
 
         filesToDownload.forEach { (urlStr, relativePath) ->
