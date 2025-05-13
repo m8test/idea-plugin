@@ -11,7 +11,14 @@ class DocumentationActionGroup : ActionGroup("文档", true) {
     }
 
     override fun getChildren(e: AnActionEvent?): Array<AnAction> {
-        return arrayOf(SdkDocsAction(), DevDocsAction())
+        return arrayOf(
+            SdkDocsAction(),
+            DevDocsAction(),
+            AccessibilitySdkDocsAction(),
+            OcrSdkDocsAction(),
+            OpencvSdkDocsAction(),
+            ScrcpySdkDocsAction()
+        )
     }
 
     override fun update(e: AnActionEvent) {
