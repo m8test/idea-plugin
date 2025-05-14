@@ -2,30 +2,58 @@
 
 # [M8Test](https://dev-docs.m8test.com) IntelliJ 插件
 
-此插件需要配合 [M8Test 调试插件](https://github.com/m8test/debugger) 使用.
+> Tips: 推荐使用M8Test官方提供的idea集成开发环境, 因为这是通过测试的, 其他环境可能会有未知的问题.
 
-+ Tips: 如果有任何问题都可以加入我们的官方qq交流群:[749248182](https://qm.qq.com/q/d0g29SBUGY)
-  或者 [qq频道](https://pd.qq.com/g/m8testofficial),
-  官方视频教程可以到 [哔哩哔哩](https://space.bilibili.com/1588813179) 查看
+## 插件功能
 
-## 配置设备信息
+1. 一键安装开发环境
+2. 本地离线文档
+3. 设备日志同步
+4. 设备投屏
+5. UI布局分析
+6. 新建脚本项目
 
-+ 设备IP: 调试设备(手机/模拟器/云机)的ip地址
-+ Adb端口: 调试设备Adb调试端口
-+ 调试端口: [M8Test 调试插件](https://github.com/m8test/debugger) 启动的端口
-+ 启用 Adb 端口转发: 对于无法访问设备ip(模拟器)的可以开启此选项然后在操作面板中执行端口转发, 就可以将电脑本地端口和设备调试端口映射。
+## 功能说明
 
-![settings.png](https://raw.githubusercontent.com/m8test/idea-plugin/refs/heads/main/images/settings.png)
+在Tools菜单下找到M8Test可以看到所有M8Test支持的动作。
 
-## M8Test项目开发步骤
+### 安装环境
 
-![operations.png](https://raw.githubusercontent.com/m8test/idea-plugin/refs/heads/main/images/operations.png)
+安装环境时需要两个压缩包的路径作为参数
 
-1. 点击`连接设备`按钮连接调试设备
-2. 点击`执行端口转发`按钮进行adb端口转发(可选)
-3. 点击`启动scrcpy`将调试设备投屏到电脑(可选)
-4. 点击`连接 websocket 日志`按钮将调试设备的日志同步到电脑端
-5. 在电脑端修改代码后点击`推送并运行项目`按钮即可将本地修改内容同步到调试设备然后运行项目
+1. gradle: M8Test会使用gradle作为项目管理工具, 安装环境时会将 gradle.zip
+   解压到gradle的安装目录 (`~/.gradle/wrapper/dists/`), 通过gradle将很多复杂的步骤简单化, 可以实现自动化构建M8Test脚本项目,
+   也可以更好地提供代码提示。
+2. m8test: 包含了M8Test开发中常用的工具, 例如M8Test安装包、 离线文档、常用组件和语言插件、 python, node, jruby等语言环境,
+   安装好后可以不用再从网络下载, 就算没有魔法网络也可以正常开发脚本项目, 该压缩包会解压到m8test目录(`~/.m8test/`)
+
+### 本地离线文档
+
+插件集成了以下文档, 本地存储路径为 `~/.gradle/docs/`:
+
+1. M8Test sdk文档: 可以查看所有M8Test app支持的java api
+2. M8Test 开发文档: 开发M8Test脚本项目时的手册
+3. [无障碍 sdk 文档](https://github.com/YumiMiyamoto/accessibility-release): 无障碍组件(YumiMiyamotoAccessibility)
+   中支持的java api
+4. [文字识别 sdk 文档](https://github.com/YumiMiyamoto/ocr-release): 文字识别组件(YumiMiyamotoOcr)中支持的java api
+5. [图色 sdk 文档](https://github.com/YumiMiyamoto/opencv-release): 图色组件(YumiMiyamotoOpencv)中支持的java api
+6. [adb 自动化 sdk 文档](https://github.com/YumiMiyamoto/scrcpy-release): adb自动化组件(YumiMiyamotoScrcpy)中支持的java
+   api
+
+### 连接日志服务
+
+将设备端的日志输出同步到M8Test日志面板中
+
+### 启动投屏
+
+将设备投屏到电脑，可对设备进行控制。
+
+### UI布局分析
+
+分析已通过adb连接的设备的UI布局, 可结合无障碍组件使用。
+
+### 新建M8Test项目
+
+`New` > `Project` > `M8Test` > `Groovy/Java/Javascript/Kotlin/Lua/Php/Python/Ruby` > `Next` > `输入项目名和目录` > `Create`
 
 <!-- Plugin description end -->
-
