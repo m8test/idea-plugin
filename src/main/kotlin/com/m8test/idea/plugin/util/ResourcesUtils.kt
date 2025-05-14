@@ -8,6 +8,23 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 object ResourcesUtils {
+    @Throws(IOException::class)
+    fun copyResourceToFile(resourcePath: String, targetFile: File) {
+        val inputStream: InputStream = ResourcesUtils::class.java.getResourceAsStream(resourcePath)
+            ?: throw IOException("资源文件 $resourcePath 未找到")
+
+        val parentDir = targetFile.parentFile
+        if (parentDir != null && !parentDir.exists() && !parentDir.mkdirs()) {
+            throw IOException("无法创建目标文件的父目录: ${parentDir.absolutePath}")
+        }
+
+        inputStream.use { input ->
+            targetFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+    }
+
     // 现有方法（解压资源文件）
     @Throws(IOException::class)
     fun unzipFromResources(resourcePath: String, targetDir: File) {

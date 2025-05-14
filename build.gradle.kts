@@ -211,14 +211,14 @@ tasks {
 }
 // 定义一个统一的下载任务
 val downloadM8TestResources by tasks.registering {
-    val m8testGradlePath: String by project
-    val m8testGradleJar = File(project.projectDir, m8testGradlePath)
-    val resourceRoot: File = project.file("src/main/resources")
+//    val m8testGradlePath: String by project
+//    val m8testGradleJar = File(project.projectDir, m8testGradlePath)
+//    val resourceRoot: File = project.file("src/main/resources")
     val zipFile = getJavaAgentZip(project)
     val jarFile = getJavaAgentJar(project)
     val jad = getJavaAgentDir(project)
     doLast {
-        m8testGradleJar.copyTo(File(resourceRoot, "M8Test/m8test-gradle.jar"), true)
+//        m8testGradleJar.copyTo(File(resourceRoot, "M8Test/m8test-gradle.jar"), true)
         if (!jarFile.exists()) {
             zipFile.parentFile.mkdirs()
             println("Downloading file to $zipFile")
