@@ -109,7 +109,7 @@ class InstallM8TestAction : AnAction("安装环境", "安装开发环境", null)
 // 对话框类
 class InputPathsDialog : DialogWrapper(true) {
     // 默认路径
-    private var _gradleZipPath = File(File(PathManager.getHomePath(), "m8test"), "gradle.zip").canonicalPath
+    private var _gradleZipPath = File(File(PathManager.getHomePath(), "m8test"), "gradle-8.14-bin.zip").canonicalPath
     private var _m8testZipPath = File(File(PathManager.getHomePath(), "m8test"), "m8test.zip").canonicalPath
 
     // 公开访问器

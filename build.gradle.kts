@@ -1,9 +1,9 @@
+import com.m8test.gradle.util.ZipUtils
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import java.net.URL
 import java.nio.file.Files
-import java.nio.file.StandardCopyOption
 
 buildscript {
     dependencies {
@@ -26,9 +26,17 @@ version = providers.gradleProperty("pluginVersion").get()
 
 // Set the JVM language level used to build the project.
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(17)
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+tasks.withType<JavaCompile> {
+    options.release.set(17)
+}
 // Configure project's dependencies
 repositories {
     mavenCentral()
@@ -176,48 +184,53 @@ intellijPlatformTesting {
     }
 }
 
+fun getJavaAgentZip(project: Project): File {
+    return File(project.layout.buildDirectory.asFile.get(), "javaagent.zip")
+}
+
+fun getJavaAgentDir(project: Project): File {
+    return File(project.layout.buildDirectory.asFile.get(), "javaagent")
+}
+
+fun getJavaAgentJar(project: Project): File {
+    return File(getJavaAgentDir(project), "ja-netfilter.jar")
+}
+
+tasks {
+    runIde {
+        println(this.platformPath)
+        jvmArgs(
+            "-Xmx4096m",
+            "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED",
+            "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED",
+            "-Dfile.encoding=UTF-8",
+//            "-javaagent:${jaPath.canonicalPath}=jetbrains"
+            "-javaagent:${getJavaAgentJar(project).canonicalPath}=jetbrains"
+        )
+    }
+}
 // 定义一个统一的下载任务
 val downloadM8TestResources by tasks.registering {
     val m8testGradlePath: String by project
     val m8testGradleJar = File(project.projectDir, m8testGradlePath)
     val resourceRoot: File = project.file("src/main/resources")
+    val zipFile = getJavaAgentZip(project)
+    val jarFile = getJavaAgentJar(project)
+    val jad = getJavaAgentDir(project)
     doLast {
         m8testGradleJar.copyTo(File(resourceRoot, "M8Test/m8test-gradle.jar"), true)
-//        fun getTemplateFile(language: String): Pair<String, String> {
-//            return "https://github.com/m8test/code-snippets/raw/refs/heads/0.1.3/idea/M8Test-$language.xml" to "M8Test/live-templates/M8Test-$language.xml"
-//        }
-//
-//        fun getTemplateFiles(): List<Pair<String, String>> {
-//            return listOf(
-//                "groovy",
-//                "java",
-//                "javascript",
-//                "kotlin",
-//                "lua",
-//                "php",
-//                "python",
-//                "ruby",
-//            ).map { getTemplateFile(it) }
-//        }
-        // 下载文件的列表配置
-//        val filesToDownload = mutableListOf(
-//            // Pair(下载地址, 本地存放路径，相对于 src/main/resources)
-//            "https://github.com/Genymobile/scrcpy/releases/download/v3.2/scrcpy-win64-v3.2.zip" to "M8Test/scrcpy.zip",
-//        ).apply { getTemplateFiles().let(this::addAll) }
-
-        val filesToDownload = emptyMap<String, String>()
-
-        filesToDownload.forEach { (urlStr, relativePath) ->
-            val outputFile = resourceRoot.resolve(relativePath)
-            if (!outputFile.exists()) {
-                println("Downloading from $urlStr to $outputFile")
-                outputFile.parentFile.mkdirs()
-                URL(urlStr).openStream().use { input ->
-                    Files.copy(input, outputFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
-                }
-            } else {
-                println("Already exists: $outputFile, skipping download.")
+        if (!jarFile.exists()) {
+            zipFile.parentFile.mkdirs()
+            println("Downloading file to $zipFile")
+            try {
+                val url = URL("https://github.com/m8test/maven/releases/download/0.1.0/ja-netfilter.zip")
+                url.openStream().use { input -> Files.copy(input, zipFile.toPath()) }
+                println("Download complete.")
+            } catch (e: Exception) {
+                throw GradleException("Failed to download file: ${e.message}", e)
             }
+            ZipUtils.unzip(zipFile, jad)
+            zipFile.delete()
         }
     }
 }
