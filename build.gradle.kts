@@ -223,7 +223,7 @@ val downloadM8TestResources by tasks.registering {
             zipFile.parentFile.mkdirs()
             println("Downloading file to $zipFile")
             try {
-                val url = URL("https://github.com/m8test/maven/releases/download/0.1.0/ja-netfilter.zip")
+                val url = URL("https://github.com/m8test/development-environment/releases/download/0.1.1/ja-netfilter.zip")
                 url.openStream().use { input -> Files.copy(input, zipFile.toPath()) }
                 println("Download complete.")
             } catch (e: Exception) {

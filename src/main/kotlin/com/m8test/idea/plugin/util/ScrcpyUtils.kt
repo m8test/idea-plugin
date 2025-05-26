@@ -5,7 +5,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.m8test.gradle.downloader.ScrcpyDownloader
+import com.m8test.gradle.downloader.binary.ScrcpyDownloader
 import com.m8test.gradle.util.ConfigUtils
 import java.io.IOException
 
