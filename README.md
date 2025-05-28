@@ -11,7 +11,8 @@
 3. 设备日志同步
 4. 设备投屏
 5. UI布局分析
-6. 新建脚本项目
+6. 图色助手
+7. 新建脚本项目
 
 ## 功能说明
 
@@ -19,13 +20,8 @@
 
 ### 安装环境
 
-安装环境时需要两个压缩包的路径作为参数
-
-1. gradle: M8Test会使用gradle作为项目管理工具, 安装环境时会将 gradle.zip
-   解压到gradle的安装目录 (`~/.gradle/wrapper/dists/`), 通过gradle将很多复杂的步骤简单化, 可以实现自动化构建M8Test脚本项目,
-   也可以更好地提供代码提示。
-2. m8test: 包含了M8Test开发中常用的工具, 例如M8Test安装包、 离线文档、常用组件和语言插件、 python, node, jruby等语言环境,
-   安装好后可以不用再从网络下载, 就算没有魔法网络也可以正常开发脚本项目, 该压缩包会解压到m8test目录(`~/.m8test/`)
+安装包含了M8Test开发中常用的工具, 例如M8Test安装包、 离线文档、常用组件和语言插件、 python, node, jruby等语言环境,
+安装好后可以不用再从网络下载, 就算没有魔法网络也可以正常开发脚本项目, 该压缩包会解压到m8test目录(`~/.m8test/`)
 
 ### 本地离线文档
 
@@ -52,8 +48,13 @@
 
 分析已通过adb连接的设备的UI布局, 可结合无障碍组件使用。
 
+### 图色助手
+
+对设备进行截屏，之后对截图内容进行精准的裁剪操作，提取所需部分，并且能够方便地进行取色处理，获取准确的颜色信息 。
+
 ### 新建M8Test项目
 
-`New` > `Project` > `M8Test` > `Groovy/Java/Javascript/Kotlin/Lua/Php/Python/Ruby` > `Next` > `输入项目名和目录` > `Create`
+`New` > `Project` > `M8Test` > `Groovy/Java/Javascript/Kotlin/Lua/Php/Python/Ruby` > `Next` > `输入项目名和目录` >
+`Create`
 
 <!-- Plugin description end -->

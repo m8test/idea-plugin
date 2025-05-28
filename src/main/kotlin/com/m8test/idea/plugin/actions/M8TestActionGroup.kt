@@ -19,7 +19,8 @@ class M8TestActionGroup : ActionGroup("M8Test", true) {
             DocumentationActionGroup(),
             ConnectWebSocketAction(),
             ConnectScrcpyAction(),
-            StartUiAutoDevAction()
+            StartUiAutoDevAction(),
+            ScriptGraphicHelperAction()
         )
     }
 

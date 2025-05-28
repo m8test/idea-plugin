@@ -37,16 +37,9 @@ class InstallM8TestAction : AnAction("安装环境", "安装开发环境", null)
         }
 
         // 获取用户输入
-        val gradleZipPath = dialog.gradleZipPath
         val m8testZipPath = dialog.m8testZipPath
-
         // 验证输入
-        val gradleZipFile = File(gradleZipPath)
         val m8testZipFile = File(m8testZipPath)
-        if (!gradleZipFile.exists() || !gradleZipFile.isFile || !gradleZipPath.endsWith(".zip")) {
-            Messages.showErrorDialog("Gradle 压缩包路径无效或不是 ZIP 文件", "输入错误")
-            return
-        }
         if (!m8testZipFile.exists() || !m8testZipFile.isFile || !m8testZipPath.endsWith(".zip")) {
             Messages.showErrorDialog("m8test 压缩包路径无效或不是 ZIP 文件", "输入错误")
             return
@@ -63,9 +56,6 @@ class InstallM8TestAction : AnAction("安装环境", "安装开发环境", null)
         object : Task.Backgroundable(e.project, "安装环境", true) {
             override fun run(indicator: ProgressIndicator) {
                 try {
-                    // 解压 Gradle ZIP
-                    indicator.text = "正在解压 Gradle 压缩包 ${gradleZipFile.name}..."
-                    ResourcesUtils.unzipFromFile(gradleZipFile, gradleTargetDir)
                     // 解压 m8test ZIP
                     indicator.text = "正在解压 m8test 压缩包 ${m8testZipFile.name}..."
                     ResourcesUtils.unzipFromFile(m8testZipFile, m8testTargetDir)
@@ -109,11 +99,9 @@ class InstallM8TestAction : AnAction("安装环境", "安装开发环境", null)
 // 对话框类
 class InputPathsDialog : DialogWrapper(true) {
     // 默认路径
-    private var _gradleZipPath = File(File(PathManager.getHomePath(), "m8test"), "gradle-8.14-bin.zip").canonicalPath
     private var _m8testZipPath = File(File(PathManager.getHomePath(), "m8test"), "m8test.zip").canonicalPath
 
     // 公开访问器
-    val gradleZipPath: String get() = _gradleZipPath
     val m8testZipPath: String get() = _m8testZipPath
 
     init {
@@ -123,15 +111,7 @@ class InputPathsDialog : DialogWrapper(true) {
 
     override fun createCenterPanel(): JComponent {
         return panel {
-            row { label("Gradle 压缩包路径:") }
-            row {
-                textField()
-                    .bindText(::_gradleZipPath)
-                    .columns(50)
-                    .align(AlignX.FILL) // 修复：使用 align(AlignX.FILL) 替代 horizontalAlign
-                    .applyToComponent { preferredSize = Dimension(400, preferredSize.height) }
-            }
-            row { label("m8test 压缩包路径:") }
+            row { label("m8test 开发环境压缩包路径:") }
             row {
                 textField()
                     .bindText(::_m8testZipPath)
@@ -143,9 +123,6 @@ class InputPathsDialog : DialogWrapper(true) {
     }
 
     override fun doValidate(): ValidationInfo? {
-        if (_gradleZipPath.isEmpty()) {
-            return ValidationInfo("请输入 Gradle 压缩包路径")
-        }
         if (_m8testZipPath.isEmpty()) {
             return ValidationInfo("请输入 m8test 压缩包路径")
         }
