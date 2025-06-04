@@ -10,7 +10,7 @@ if (!targetFile.exists()) {
     targetFile.parentFile.mkdirs()
     println("Downloading file to $targetFile")
     try {
-        val version = "0.1.2"
+        val version = "0.1.3"
         val url = URL("https://github.com/m8test/development-environment/releases/download/$version/com.m8test.gradle.plugin-$version.jar")
         url.openStream().use { input -> Files.copy(input, targetFile.toPath()) }
         println("Download complete.")
