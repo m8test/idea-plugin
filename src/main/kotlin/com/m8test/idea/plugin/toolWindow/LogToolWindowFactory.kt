@@ -171,7 +171,8 @@ class LogToolWindowFactory : ToolWindowFactory {
                 LogUtils.LEVEL_ASSERT -> Color(30, 144, 255) // 蓝色
                 else -> Color(169, 169, 169) // 默认灰色
             }
-            val fullText = "$prefix${entry.message}\n"
+
+            val fullText = "${entry.time} $prefix${entry.message}\n"
 
             val entryObj = LogEntry(fullText, entry.level.uppercase(), color)
             logEntries.add(entryObj)
