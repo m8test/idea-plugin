@@ -7,8 +7,14 @@ import java.nio.file.Files
 
 buildscript {
     dependencies {
-        val m8testGradlePath: String by project
-        classpath(project.files(m8testGradlePath))
+        val m8testVersion: String by project
+        classpath("com.m8test:gradle-plugin:$m8testVersion")
+    }
+    repositories {
+        maven {
+            val m8testVersion: String by project
+            url = uri("https://raw.githubusercontent.com/m8test/development-environment/refs/heads/v${m8testVersion}/")
+        }
     }
 }
 
@@ -37,6 +43,7 @@ java {
 tasks.withType<JavaCompile> {
     options.release.set(17)
 }
+
 // Configure project's dependencies
 repositories {
     mavenCentral()
@@ -45,12 +52,17 @@ repositories {
     intellijPlatform {
         defaultRepositories()
     }
+
+    maven {
+        val m8testVersion: String by project
+        url = uri("https://raw.githubusercontent.com/m8test/development-environment/refs/heads/v${m8testVersion}/")
+    }
 }
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
-    val m8testGradlePath: String by project
-    implementation(files(m8testGradlePath))
+    val m8testVersion: String by project
+    implementation("com.m8test:gradle-plugin:$m8testVersion")
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.json)
@@ -211,14 +223,10 @@ tasks {
 }
 // 定义一个统一的下载任务
 val downloadM8TestResources by tasks.registering {
-//    val m8testGradlePath: String by project
-//    val m8testGradleJar = File(project.projectDir, m8testGradlePath)
-//    val resourceRoot: File = project.file("src/main/resources")
     val zipFile = getJavaAgentZip(project)
     val jarFile = getJavaAgentJar(project)
     val jad = getJavaAgentDir(project)
     doLast {
-//        m8testGradleJar.copyTo(File(resourceRoot, "M8Test/m8test-gradle.jar"), true)
         if (!jarFile.exists()) {
             zipFile.parentFile.mkdirs()
             println("Downloading file to $zipFile")
